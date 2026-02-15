@@ -1,5 +1,21 @@
-# bagakit
+# bagakit/.github
 
-- living-docs：提供项目级规则、SOP、记忆沉淀。
-- feat-task-harness：提供 feat/task 双层编排、worktree 隔离、task 小提交协议、门禁与可恢复状态机。
-- long-run：提供长会话 coding loop（initializer/coding）微循环。
+bagakit 组织主页与公共安装入口仓库。
+
+## Contents
+
+- `profile/README.md`: GitHub Organization Profile 页面内容。
+- `scripts/install-bagakit-skills.sh`: bagakit skills 检索与一键安装脚本。
+
+## Quick Start
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/bagakit/.github/main/scripts/install-bagakit-skills.sh \
+  | bash -s -- --dest ~/.codex/skills
+```
+
+更多参数：
+
+```bash
+bash scripts/install-bagakit-skills.sh --help
+```

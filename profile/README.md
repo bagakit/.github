@@ -1,52 +1,62 @@
 # bagakit
 
-Reliable building blocks for long-running AI engineering workflows.
+`bagakit` 是一个 AI 编程 skill 组织，目标是把“个人经验”沉淀成“团队可复制的规模化提效机制”。
 
-We build practical, composable tools that make agent work auditable, resumable, and easier to scale across sessions and teams.
+我们提供可组合、可审计、可恢复的 skill 组件，帮助团队把 agent 协作流程产品化，而不是停留在一次性提示词。
 
-## What We Build
+## Core Repositories
 
-| Repository | Focus | What You Get |
+| Repository | Role | Key Capability |
 | --- | --- | --- |
-| [bagakit-living-docs](https://github.com/bagakit/bagakit-living-docs) | Living documentation + project memory | `docs/must-*.md`, managed `AGENTS.md`, memory/inbox workflow, deterministic recall |
-| [bagakit-feat-task-harness](https://github.com/bagakit/bagakit-feat-task-harness) | Feat/Task orchestration harness | OpenSpec-style change flow, per-feat worktree isolation, JSON SSOT state, task-level commit protocol |
-| [bagakit-long-run](https://github.com/bagakit/bagakit-long-run) | Long-running coding loop | initializer/coding session loop, machine-readable feature state, repeatable health checks |
-| [open-agent-avatars](https://github.com/bagakit/open-agent-avatars) | UI assets for agent products | production-ready animated SVG avatar packs for agent interfaces |
+| [bagakit-living-docs](https://github.com/bagakit/bagakit-living-docs) | 规则与记忆层 | `docs/must-*.md`、inbox/memory、项目约束持续演进 |
+| [bagakit-feat-task-harness](https://github.com/bagakit/bagakit-feat-task-harness) | 变更编排层 | feat/task 双层模型、worktree 隔离、task 小提交协议 |
+| [bagakit-long-run](https://github.com/bagakit/bagakit-long-run) | 执行循环层 | 长会话执行表、门禁驱动推进、可恢复 loop |
 
-## Why This Stack
+## What You Get
 
-1. `living-docs` keeps project rules and memory continuously up to date.
-2. `feat-task-harness` turns large goals into isolated, auditable feat/task execution.
-3. `long-run` provides stable multi-session delivery loops for implementation work.
-4. Combined, they form a full loop: **decide -> execute -> verify -> commit -> learn -> reuse**.
+1. 以状态机和工件为中心的执行过程，而不是口头约定。
+2. task 级可审计提交，便于 review、回溯和指标化治理。
+3. 可中断恢复的长跑流程，支持跨会话持续推进。
+4. 规则驱动联动（非硬编码耦合），可扩展到 OpenSpec、Bagakit F/T Harness 等多种 spec 系统。
 
-## Design Principles
+## Install Skills In One Command
 
-- Deterministic over magical.
-- Scriptable over manual.
-- Small commits over large opaque diffs.
-- State machines over ad-hoc progress tracking.
-- Optional integrations, strong standalone behavior.
+使用 `.github` 仓库内脚本可自动检索并安装 skills：
 
-## Who This Is For
+```bash
+curl -fsSL https://raw.githubusercontent.com/bagakit/.github/main/scripts/install-bagakit-skills.sh \
+  | bash -s -- --dest ~/.codex/skills
+```
 
-- Teams running agent-assisted software development.
-- Builders shipping features across many sessions.
-- Projects that need clear audit trails, recoverability, and repeatable workflows.
+默认会安装三件套：
 
-## Get Started
+- `bagakit-living-docs`
+- `bagakit-feat-task-harness`
+- `bagakit-long-run`
 
-1. Install one or more skills from this org.
-2. Bootstrap project docs/memory with `bagakit-living-docs`.
-3. Start feature orchestration with `bagakit-feat-task-harness`.
-4. Run long coding sessions with `bagakit-long-run`.
-5. Keep every step validated, traceable, and reviewable.
+常用参数：
 
-## Status
+```bash
+# 仅检索可安装 skills
+bash scripts/install-bagakit-skills.sh --list
 
-Actively evolving. We optimize for real usage first, then abstraction.
+# 安装组织下所有可检索到的 skills（包含 SKILL.md 的仓库）
+bash scripts/install-bagakit-skills.sh --dest ~/.codex/skills --all
 
-## Contributing
+# 按需安装指定 skills
+bash scripts/install-bagakit-skills.sh --dest ~/.codex/skills \
+  --skill bagakit-living-docs \
+  --skill bagakit-long-run
+```
 
-Issues and PRs are welcome.  
-If you are building long-running agent workflows, we’d like to collaborate.
+## Principles
+
+- Rule-driven, not name-driven.
+- Deterministic, not implicit.
+- Small commits, explicit gates.
+- Optional coupling, strong standalone behavior.
+
+## Collaborate
+
+欢迎 issue / PR / 方案讨论。  
+如果你在做 AI 编程流程化建设，欢迎一起共建可复制的工程能力。
