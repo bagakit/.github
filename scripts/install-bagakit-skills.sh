@@ -55,8 +55,9 @@ Behavior:
   - With no --skill/--all, installs core trio:
       bagakit-living-docs, bagakit-feat-task-harness, bagakit-long-run
   - Discovery checks repositories that contain SKILL.md at repo root.
-  - Installs only the skill payload (SKILL.md + scripts/references/agents/assets + optional README.md),
-    not repo development files (docs/, Makefile, dist/, .codex/, etc.).
+  - If a repo provides SKILL_PAYLOAD.json at repo root, installs exactly those declared paths.
+  - Otherwise, falls back to a safe default payload (SKILL.md + scripts/references/agents/assets + optional README.md).
+  - Never installs repo development/dogfooding files (docs/, Makefile, dist/, .codex/, etc.) unless explicitly declared.
 
 Examples:
   install-bagakit-skills.sh --list
@@ -275,25 +276,86 @@ install_one_skill() {
   fi
 
   mkdir -p "$install_dir"
-  # Install only the skill payload (avoid copying repo dogfooding docs, Makefile, dist, .codex, etc).
-  # Common skill structure: SKILL.md + scripts/ + references/ (+ optional agents/, assets/).
   local include_paths=()
-  include_paths+=("SKILL.md")
-  if [ -f "${clone_dir}/README.md" ]; then
-    include_paths+=("README.md")
+
+  # Prefer explicit per-repo payload declaration when available.
+  # This keeps installs minimal and prevents leaking repo dogfooding docs/Makefile/etc into skill dirs.
+  if [ -f "${clone_dir}/SKILL_PAYLOAD.json" ]; then
+    local payload_list=""
+    payload_list="$(python3 - "${clone_dir}/SKILL_PAYLOAD.json" <<'PY'
+import json
+import os
+import sys
+
+path = sys.argv[1]
+data = json.load(open(path, "r", encoding="utf-8"))
+if int(data.get("version", 0)) != 1:
+    raise SystemExit("SKILL_PAYLOAD.json version must be 1")
+include = data.get("include")
+if not isinstance(include, list) or not include:
+    raise SystemExit("SKILL_PAYLOAD.json include must be a non-empty array")
+
+out = []
+for item in include:
+    if not isinstance(item, str) or not item.strip():
+        raise SystemExit("SKILL_PAYLOAD.json include entries must be non-empty strings")
+    raw = item.strip()
+    if os.path.isabs(raw):
+        raise SystemExit(f"SKILL_PAYLOAD.json include path must be relative: {raw}")
+    norm = os.path.normpath(raw)
+    if norm in (".", "..") or norm.startswith(".." + os.sep):
+        raise SystemExit(f"SKILL_PAYLOAD.json include path traversal is not allowed: {raw}")
+    out.append(norm)
+
+if "SKILL.md" not in out:
+    raise SystemExit("SKILL_PAYLOAD.json include must contain SKILL.md")
+
+seen = set()
+for x in out:
+    if x in seen:
+        continue
+    seen.add(x)
+    print(x)
+PY
+)" || die "Invalid SKILL_PAYLOAD.json in ${repo}"
+
+    while IFS= read -r line; do
+      if [ -n "${line:-}" ]; then
+        include_paths+=("$line")
+      fi
+    done <<<"$payload_list"
+  else
+    # Fallback: safe default payload (avoid copying repo dogfooding docs, Makefile, dist, .codex, etc).
+    # Common skill structure: SKILL.md + scripts/ + references/ (+ optional agents/, assets/, README.md).
+    include_paths+=("SKILL.md")
+    if [ -f "${clone_dir}/README.md" ]; then
+      include_paths+=("README.md")
+    fi
+    if [ -d "${clone_dir}/scripts" ]; then
+      include_paths+=("scripts")
+    fi
+    if [ -d "${clone_dir}/references" ]; then
+      include_paths+=("references")
+    fi
+    if [ -d "${clone_dir}/agents" ]; then
+      include_paths+=("agents")
+    fi
+    if [ -d "${clone_dir}/assets" ]; then
+      include_paths+=("assets")
+    fi
   fi
-  if [ -d "${clone_dir}/scripts" ]; then
-    include_paths+=("scripts")
+
+  if [ "${#include_paths[@]}" -eq 0 ]; then
+    die "No install payload paths resolved for ${repo}"
   fi
-  if [ -d "${clone_dir}/references" ]; then
-    include_paths+=("references")
-  fi
-  if [ -d "${clone_dir}/agents" ]; then
-    include_paths+=("agents")
-  fi
-  if [ -d "${clone_dir}/assets" ]; then
-    include_paths+=("assets")
-  fi
+
+  local p=""
+  for p in "${include_paths[@]}"; do
+    if [ ! -e "${clone_dir}/${p}" ]; then
+      die "Install payload path missing in ${repo}: ${p}"
+    fi
+  done
+
   (
     cd "$clone_dir"
     LC_ALL=C tar cf - --exclude='.git' "${include_paths[@]}"
