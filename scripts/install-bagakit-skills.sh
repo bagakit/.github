@@ -55,6 +55,8 @@ Behavior:
   - With no --skill/--all, installs core trio:
       bagakit-living-docs, bagakit-feat-task-harness, bagakit-long-run
   - Discovery checks repositories that contain SKILL.md at repo root.
+  - Installs only the skill payload (SKILL.md + scripts/references/agents/assets + optional README.md),
+    not repo development files (docs/, Makefile, dist/, .codex/, etc.).
 
 Examples:
   install-bagakit-skills.sh --list
@@ -273,9 +275,28 @@ install_one_skill() {
   fi
 
   mkdir -p "$install_dir"
+  # Install only the skill payload (avoid copying repo dogfooding docs, Makefile, dist, .codex, etc).
+  # Common skill structure: SKILL.md + scripts/ + references/ (+ optional agents/, assets/).
+  local include_paths=()
+  include_paths+=("SKILL.md")
+  if [ -f "${clone_dir}/README.md" ]; then
+    include_paths+=("README.md")
+  fi
+  if [ -d "${clone_dir}/scripts" ]; then
+    include_paths+=("scripts")
+  fi
+  if [ -d "${clone_dir}/references" ]; then
+    include_paths+=("references")
+  fi
+  if [ -d "${clone_dir}/agents" ]; then
+    include_paths+=("agents")
+  fi
+  if [ -d "${clone_dir}/assets" ]; then
+    include_paths+=("assets")
+  fi
   (
     cd "$clone_dir"
-    LC_ALL=C tar cf - --exclude='.git' .
+    LC_ALL=C tar cf - --exclude='.git' "${include_paths[@]}"
   ) | (
     cd "$install_dir"
     LC_ALL=C tar xf -

@@ -14,6 +14,8 @@ curl -fsSL https://raw.githubusercontent.com/bagakit/.github/main/scripts/instal
   | bash -s -- --dest ~/.codex/skills
 ```
 
+安装脚本默认只安装 skill 运行载荷（`SKILL.md`、`scripts/`、`references/`、可选 `agents/`/`assets/`/`README.md`），不会把仓库开发文件（如 `docs/`、`Makefile`、`dist/`、`.codex/`）带进 skills 目录。
+
 更多参数：
 
 ```bash
