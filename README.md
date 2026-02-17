@@ -6,6 +6,7 @@ bagakit 组织主页与公共安装入口仓库。
 
 - `profile/README.md`: GitHub Organization Profile 页面内容。
 - `scripts/install-bagakit-skills.sh`: bagakit skills 检索与一键安装脚本。
+- `docs/skill-development.md`: BAGAKIT skill 开发规范（独立性、payload、运行/开发文件边界、AGENTS 驱动指令约定）。
 
 ## Quick Start
 
