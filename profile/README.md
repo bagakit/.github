@@ -55,6 +55,7 @@ bash scripts/install-bagakit-skills.sh --dest ~/.codex/skills \
 - Deterministic, not implicit.
 - Small commits, explicit gates.
 - Optional coupling, strong standalone behavior.
+- Cross-skill signals via optional schema contracts; no direct required flow-calls.
 
 ## Collaborate
 
