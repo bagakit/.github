@@ -12,6 +12,8 @@
 | [bagakit-living-docs](https://github.com/bagakit/bagakit-living-docs) | 规则与记忆层 | `docs/must-*.md`、inbox/memory、项目约束持续演进 |
 | [bagakit-feat-task-harness](https://github.com/bagakit/bagakit-feat-task-harness) | 变更编排层 | feat/task 双层模型、worktree 隔离、task 小提交协议 |
 | [bagakit-long-run](https://github.com/bagakit/bagakit-long-run) | 执行循环层 | 长会话执行表、门禁驱动推进、可恢复 loop |
+| [bagakit-brainstorm](https://github.com/bagakit/bagakit-brainstorm) | 方案规划层 | 从 Markdown 上下文生成可执行方案、输出路由与归档闭环 |
+| [bagakit-skill-maker](https://github.com/bagakit/bagakit-skill-maker) | 技能工程层 | skill 设计约束、payload 边界、validate 与重构方法 |
 
 ## What You Get
 
@@ -34,6 +36,11 @@ curl -fsSL https://raw.githubusercontent.com/bagakit/skills/main/scripts/install
 - `bagakit-living-docs`
 - `bagakit-feat-task-harness`
 - `bagakit-long-run`
+
+可按需追加：
+
+- `bagakit-brainstorm`
+- `bagakit-skill-maker`
 
 常用参数：
 
