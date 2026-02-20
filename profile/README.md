@@ -8,6 +8,7 @@
 
 | Repository | Role | Key Capability |
 | --- | --- | --- |
+| [skills](https://github.com/bagakit/skills) | 发行与编排层 | submodule 统一版本、catalog、update/validate/release、安装入口 |
 | [bagakit-living-docs](https://github.com/bagakit/bagakit-living-docs) | 规则与记忆层 | `docs/must-*.md`、inbox/memory、项目约束持续演进 |
 | [bagakit-feat-task-harness](https://github.com/bagakit/bagakit-feat-task-harness) | 变更编排层 | feat/task 双层模型、worktree 隔离、task 小提交协议 |
 | [bagakit-long-run](https://github.com/bagakit/bagakit-long-run) | 执行循环层 | 长会话执行表、门禁驱动推进、可恢复 loop |
@@ -21,10 +22,10 @@
 
 ## Install Skills In One Command
 
-使用 `.github` 仓库内脚本可自动检索并安装 skills：
+使用 `bagakit/skills` 仓库内脚本可自动检索并安装 skills：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/bagakit/.github/main/scripts/install-bagakit-skills.sh \
+curl -fsSL https://raw.githubusercontent.com/bagakit/skills/main/scripts/install-bagakit-skills.sh \
   | bash -s -- --dest ~/.codex/skills
 ```
 
@@ -38,13 +39,13 @@ curl -fsSL https://raw.githubusercontent.com/bagakit/.github/main/scripts/instal
 
 ```bash
 # 仅检索可安装 skills
-bash scripts/install-bagakit-skills.sh --list
+bash install-bagakit-skills.sh --list
 
 # 安装组织下所有可检索到的 skills（包含 SKILL.md 的仓库）
-bash scripts/install-bagakit-skills.sh --dest ~/.codex/skills --all
+bash install-bagakit-skills.sh --dest ~/.codex/skills --all
 
 # 按需安装指定 skills
-bash scripts/install-bagakit-skills.sh --dest ~/.codex/skills \
+bash install-bagakit-skills.sh --dest ~/.codex/skills \
   --skill bagakit-living-docs \
   --skill bagakit-long-run
 ```
