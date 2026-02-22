@@ -41,6 +41,15 @@ curl -fsSL https://raw.githubusercontent.com/bagakit/skills/main/scripts/install
 - `bagakit-feat-task-harness`
 - `bagakit-long-run`
 
+## Bootstrap-First (Recommended)
+
+推荐用 `bagakit-bootstrap` 作为统一入口：
+
+1. `skills`：先看远端 catalog 有哪些技能。
+2. 如果本地已有技能源码，优先 `--source local-link`（SSOT，始终最新）。
+3. 如果本地没有源码，再用 `--source remote` 拉取。
+4. 执行前可先跑 `status --json` 查看目标目录状态和版本上下文。
+
 ## Design Principles
 
 - Standalone-first, optional adapters.
